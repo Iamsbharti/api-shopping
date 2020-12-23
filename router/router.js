@@ -1,23 +1,24 @@
 const router = require("express").Router();
-const { signUpControl } = require("../controller/signUpControl");
-const { loginControl } = require("../controller/loginControl");
-const {
-  recoverPwdControl,
-  resetPassword,
-} = require("../controller/recoverPwdControl");
-const {
-  loginParamValidation,
-  recoverPwdValidation,
-  resetPwdValidation,
-} = require("../middlewares/paramValidation");
+const signup = require("../controller/signUpControl");
+const login = require("../controller/loginControl");
+const recovery = require("../controller/recoverPwdControl");
+const validation = require("../middlewares/paramValidation");
 const { isAuthorized } = require("../middlewares/authorization");
 
 /**Sign up route */
-router.post("/signup", signupParamValidation, signUpControl);
+router.post("/signup", validation.signupParamValidation, signup.signUpControl);
 /**login route */
-router.post("/login", loginParamValidation, loginControl);
+router.post("/login", validation.loginParamValidation, login.loginControl);
 /**Forgot password */
-router.post("/recoverPassword", recoverPwdValidation, recoverPwdControl);
+router.post(
+  "/recoverPassword",
+  validation.recoverPwdValidation,
+  recovery.recoverPwdControl
+);
 /**Reset password */
-router.post("/resetPassword", resetPwdValidation, resetPassword);
+router.post(
+  "/resetPassword",
+  validation.resetPwdValidation,
+  recovery.resetPassword
+);
 module.exports = router;

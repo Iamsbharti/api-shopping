@@ -3,7 +3,7 @@ const { formatResponse } = require("../library/formatResponse");
 const User = require("../models/User");
 const { comparePassword } = require("../library/passwordHandler");
 
-exports.loginControl = async (req, res) => {
+const loginControl = async (req, res) => {
   console.log("Login Control");
 
   const { email, password } = req.body;
@@ -73,4 +73,7 @@ exports.loginControl = async (req, res) => {
       console.log("Error- In Login", error);
       res.status(error.status).json(error);
     });
+};
+module.exports = {
+  loginControl,
 };

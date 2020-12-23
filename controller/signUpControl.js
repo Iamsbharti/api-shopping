@@ -3,7 +3,7 @@ const shortid = require("shortid");
 const { formatResponse } = require("../library/formatResponse");
 const { hashPassword } = require("../library/passwordHandler");
 
-exports.signUpControl = async (req, res) => {
+const signUpControl = async (req, res) => {
   console.log("sign up control");
   const { firstName, lastName, email, mobile, password } = req.body;
 
@@ -61,4 +61,7 @@ exports.signUpControl = async (req, res) => {
       console.error("SignUp Error", error);
       res.status(error.status).json(error);
     });
+};
+module.exports = {
+  signUpControl,
 };

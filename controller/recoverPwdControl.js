@@ -13,7 +13,7 @@ const emailExistence = async (email) => {
   }
 };
 
-exports.recoverPwdControl = async (req, res) => {
+const recoverPwdControl = async (req, res) => {
   console.log("Recover Password control");
   const { email } = req.body;
   //generate random code and save against users' recoveryCode
@@ -99,7 +99,7 @@ exports.recoverPwdControl = async (req, res) => {
       res.status(error.status).json(error);
     });
 };
-exports.resetPassword = async (req, res) => {
+const resetPassword = async (req, res) => {
   console.log("validate recovery code and reset Password");
   const { recoveryCode, email, password } = req.body;
 
@@ -117,7 +117,7 @@ exports.resetPassword = async (req, res) => {
     return validateRes;
   };
   //reset password and recovery code
-  const resetPassword = async (foundUser) => {
+  const resetPasswordFunc = async (foundUser) => {
     //console.log("reset password");
     let query = { email: foundUser.email };
     let update = {
@@ -143,7 +143,7 @@ exports.resetPassword = async (req, res) => {
   /**Reset Password starts */
   emailExistence(email)
     .then(validateCode)
-    .then(resetPassword)
+    .then(resetPasswordFunc)
     .then((result) => {
       //console.log("Result", result);
       res
@@ -154,4 +154,8 @@ exports.resetPassword = async (req, res) => {
       console.log("Error", error);
       res.status(error.status).json(error);
     });
+};
+module.exports = {
+  recoverPwdControl,
+  resetPassword,
 };

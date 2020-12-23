@@ -2,7 +2,7 @@ const joi = require("@hapi/joi");
 const { formatResponse } = require("../library/formatResponse");
 let options = { abortEarly: false };
 
-exports.loginParamValidation = (req, res, next) => {
+const loginParamValidation = (req, res, next) => {
   //console.log("Login Param Validation");
   let loginSchema = joi.object({
     email: joi.string().email().min(4).required(),
@@ -20,7 +20,7 @@ exports.loginParamValidation = (req, res, next) => {
   next();
 };
 
-exports.recoverPwdValidation = (req, res, next) => {
+const recoverPwdValidation = (req, res, next) => {
   //console.log("Recovery Password validation");
   let recoverySchema = joi.object({
     email: joi.string().email().min(5).required(),
@@ -40,7 +40,7 @@ exports.recoverPwdValidation = (req, res, next) => {
 
   next();
 };
-exports.resetPwdValidation = (req, res, next) => {
+const resetPwdValidation = (req, res, next) => {
   //console.log("reset pwd validation");
   let resetPwdSchema = joi.object({
     recoveryCode: joi.string().min(6).required(),
@@ -62,7 +62,7 @@ exports.resetPwdValidation = (req, res, next) => {
   next();
 };
 
-exports.signupParamValidation = (req, res, next) => {
+const signupParamValidation = (req, res, next) => {
   //console.log("signupParamValidation");
   let signUpSchema = joi.object({
     firstName: joi.string().min(4).required(),
@@ -93,4 +93,10 @@ exports.signupParamValidation = (req, res, next) => {
     );
   }
   next();
+};
+module.exports = {
+  signupParamValidation,
+  loginParamValidation,
+  recoverPwdValidation,
+  resetPwdValidation,
 };
