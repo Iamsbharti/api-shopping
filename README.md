@@ -1,4 +1,4 @@
-# KanbanBoard API
+# Shopping Cart API
 
 ### What's in it for me ? :metal:
 
@@ -19,7 +19,7 @@
 
 ## Run on LocalHost
 
-- Clone the [repo](https://github.com/Iamsbharti/api-kanbanboard)
+- Clone the [repo](https://github.com/Iamsbharti/api-shopping.git)
 - Run npm install
 - Run npm run start-api
 - API server will be launched at http://localhost:[PORT]
