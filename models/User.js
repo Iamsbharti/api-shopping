@@ -4,11 +4,7 @@ let userSchema = mongoose.Schema({
     type: String,
     required: true,
   },
-  firstName: {
-    type: String,
-    required: true,
-  },
-  lastName: {
+  name: {
     type: String,
     required: true,
   },
@@ -31,7 +27,10 @@ let userSchema = mongoose.Schema({
   passwordRecoverCode: {
     type: String,
   },
-  friends: {
+  cart: {
+    type: Array,
+  },
+  wishlist: {
     type: Array,
   },
 });
