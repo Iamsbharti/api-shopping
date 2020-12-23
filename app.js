@@ -6,8 +6,7 @@ const cors = require("cors");
 const path = require("path");
 const { initdb } = require("./initdb");
 const { logIp, notfound, handleError } = require("./middlewares/errorHandler");
-const { setSocketServer } = require("./library/socketServer");
-
+const logger = require("./library/logger");
 /**Init Express server & envoirnment variables */
 const app = express();
 dotenv.config();
@@ -41,10 +40,4 @@ app.use(handleError);
 
 /**Listener */
 const port = process.env.PORT;
-let server = app.listen(port, () =>
-  console.log("API Server launched at::", port)
-);
-
-//Init socket
-console.log("SERVER_________:", server.listening);
-let socketServerInit = setSocketServer(server);
+app.listen(port, () => logger.info(`API Server launched at::${port}`));

@@ -1,5 +1,5 @@
 const mongoose = require("mongoose");
-
+const logger = require("./library/logger");
 exports.initdb = () => {
   mongoose.connect(process.env.DB_CONNECT, {
     useCreateIndex: true,
@@ -7,11 +7,11 @@ exports.initdb = () => {
     useUnifiedTopology: true,
   });
   mongoose.connection.on("error", (error) => {
-    console.log("Error connecting DB", error);
+    logger.info(`Error connecting DB ${error}`);
   });
   mongoose.connection.on("open", (error) => {
     error
-      ? console.log("Error connecting DB", error)
-      : console.log("Db Connection Sucess");
+      ? logger.info(`Error connecting DB ${error}`)
+      : logger.info("Db Connection Sucess");
   });
 };
