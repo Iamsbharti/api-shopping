@@ -65,8 +65,7 @@ const resetPwdValidation = (req, res, next) => {
 const signupParamValidation = (req, res, next) => {
   logger.info("signupParamValidation");
   let signUpSchema = joi.object({
-    firstName: joi.string().min(4).required(),
-    lastName: joi.string().min(4).required(),
+    name: joi.string().min(4).required(),
     email: joi.string().min(5).email().required(),
     mobile: joi.number().min(10).required(),
     password: joi
@@ -82,15 +81,18 @@ const signupParamValidation = (req, res, next) => {
   let { error } = signUpSchema.validate(req.body, options);
   logger.info("validation error", error);
   if (error) {
-    let errorMessage = [];
-    error.details.map((err) =>
-      errorMessage.push(
-        err.message.includes("pattern") ? "Invalid Password" : ""
-      )
-    );
-    return res.json(
-      formatResponse(true, 400, "Not valid Input Params", errorMessage)
-    );
+    let errors = [];
+    error.details.map((err) => errors.push(err.message.split("is")[0]));
+    return res
+      .status(400)
+      .json(
+        formatResponse(
+          true,
+          400,
+          `${errors.toString()} ${errors.length > 1 ? "are" : "is"} required`,
+          errors
+        )
+      );
   }
   next();
 };

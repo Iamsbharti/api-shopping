@@ -6,18 +6,22 @@ const validation = require("../middlewares/paramValidation");
 const { isAuthorized } = require("../middlewares/authorization");
 
 /**Sign up route */
-router.post("/signup", validation.signupParamValidation, signup.signUpControl);
+router.post(
+  "/user/signup",
+  validation.signupParamValidation,
+  signup.signUpControl
+);
 /**login route */
-router.post("/login", validation.loginParamValidation, login.loginControl);
+router.post("/user/login", validation.loginParamValidation, login.loginControl);
 /**Forgot password */
 router.post(
-  "/recoverPassword",
+  "/user/recoverPassword",
   validation.recoverPwdValidation,
   recovery.recoverPwdControl
 );
 /**Reset password */
 router.post(
-  "/resetPassword",
+  "/user/resetPassword",
   validation.resetPwdValidation,
   recovery.resetPassword
 );
