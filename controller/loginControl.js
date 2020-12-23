@@ -6,11 +6,14 @@ const logger = require("../library/logger");
 const loginControl = async (req, res) => {
   console.log("Login Control");
 
-  const { email, password } = req.body;
+  const { loginId, password } = req.body;
   //emailexistence
-  const emailExistence = async (email) => {
-    logger.info(`Email Existence - ${email}`);
-    let userExists = await User.findOne({ email: email });
+  const loginIdExistence = async (loginId) => {
+    logger.info(`Email Existence - ${loginId}`);
+    const query = loginId.includes("@")
+      ? { email: loginId }
+      : { mobile: loginId };
+    let userExists = await User.findOne(query);
     if (!userExists) {
       return Promise.reject(formatResponse(true, 404, "User Not Found", email));
     } else {
@@ -55,7 +58,7 @@ const loginControl = async (req, res) => {
   };
 
   /**Login controller start */
-  emailExistence(email)
+  loginIdExistence(loginId)
     .then(validateCredentials)
     .then(generateToken)
     .then((result) => {
