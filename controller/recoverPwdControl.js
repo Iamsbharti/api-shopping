@@ -15,7 +15,7 @@ const emailExistence = async (email) => {
 
 const recoverPwdControl = async (req, res) => {
   logger.info("Recover Password control");
-  const { email } = req.body;
+  const { email } = req.query;
   //generate random code and save against users' recoveryCode
   const generateRecoveryCode = async (foundUser) => {
     let recoveryCode = parseInt(Math.random() * 1000000, 10);

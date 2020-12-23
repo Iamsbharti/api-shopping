@@ -25,7 +25,7 @@ const recoverPwdValidation = (req, res, next) => {
   let recoverySchema = joi.object({
     email: joi.string().email().min(5).required(),
   });
-  let { error } = recoverySchema.validate(req.body);
+  let { error } = recoverySchema.validate(req.query);
   if (error)
     return res
       .status(400)
@@ -47,7 +47,11 @@ const resetPwdValidation = (req, res, next) => {
     email: joi.string().email().min(6).required(),
     password: joi
       .string()
-      .pattern(new RegExp("^[A-Za-z0-9]\\w{8,64}$"))
+      .pattern(
+        new RegExp(
+          "^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#$%^&*])(?=.{8,})"
+        )
+      )
       .required(),
   });
 

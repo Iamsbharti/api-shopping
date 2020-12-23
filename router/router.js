@@ -14,14 +14,14 @@ router.post(
 /**login route */
 router.post("/user/login", validation.loginParamValidation, login.loginControl);
 /**Forgot password */
-router.post(
-  "/user/recoverPassword",
+router.get(
+  "/user/recover/password",
   validation.recoverPwdValidation,
   recovery.recoverPwdControl
 );
 /**Reset password */
 router.post(
-  "/user/resetPassword",
+  "/user/reset/password",
   validation.resetPwdValidation,
   recovery.resetPassword
 );
