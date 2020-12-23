@@ -1,9 +1,9 @@
 const joi = require("@hapi/joi");
 const { formatResponse } = require("../library/formatResponse");
 let options = { abortEarly: false };
-
+const logger = require("../library/logger");
 const loginParamValidation = (req, res, next) => {
-  //console.log("Login Param Validation");
+  logger.info("Login Param Validation");
   let loginSchema = joi.object({
     email: joi.string().email().min(4).required(),
     password: joi.string().min(8).required(),
@@ -21,7 +21,7 @@ const loginParamValidation = (req, res, next) => {
 };
 
 const recoverPwdValidation = (req, res, next) => {
-  //console.log("Recovery Password validation");
+  logger.info("Recovery Password validation");
   let recoverySchema = joi.object({
     email: joi.string().email().min(5).required(),
   });
@@ -41,7 +41,7 @@ const recoverPwdValidation = (req, res, next) => {
   next();
 };
 const resetPwdValidation = (req, res, next) => {
-  //console.log("reset pwd validation");
+  logger.info("reset pwd validation");
   let resetPwdSchema = joi.object({
     recoveryCode: joi.string().min(6).required(),
     email: joi.string().email().min(6).required(),
@@ -63,7 +63,7 @@ const resetPwdValidation = (req, res, next) => {
 };
 
 const signupParamValidation = (req, res, next) => {
-  //console.log("signupParamValidation");
+  logger.info("signupParamValidation");
   let signUpSchema = joi.object({
     firstName: joi.string().min(4).required(),
     lastName: joi.string().min(4).required(),
@@ -80,7 +80,7 @@ const signupParamValidation = (req, res, next) => {
   });
 
   let { error } = signUpSchema.validate(req.body, options);
-  //console.log("validation error", error);
+  logger.info("validation error", error);
   if (error) {
     let errorMessage = [];
     error.details.map((err) =>
