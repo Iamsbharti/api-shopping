@@ -1,6 +1,6 @@
 const mongoose = require("mongoose");
 const Category = require("./Category");
-const Image = require("./Image");
+const Images = require("./Images");
 let productSchema = mongoose.Schema({
   productId: {
     type: String,
@@ -11,7 +11,7 @@ let productSchema = mongoose.Schema({
     required: true,
   },
   category: { type: mongoose.Schema.Types.ObjectId, ref: "Category" },
-  image: [{ type: mongoose.Schema.Types.ObjectId, ref: "Image" }],
+  image: [{ type: mongoose.Schema.Types.ObjectId, ref: "Images" }],
   price: {
     type: Number,
     required: true,
