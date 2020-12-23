@@ -2,14 +2,15 @@ const User = require("../models/User");
 const shortid = require("shortid");
 const { formatResponse } = require("../library/formatResponse");
 const { hashPassword } = require("../library/passwordHandler");
+const logger = require("../library/logger");
 
 const signUpControl = async (req, res) => {
-  console.log("sign up control");
-  const { firstName, lastName, email, mobile, password } = req.body;
+  logger.info("sign up control");
+  const { name, email, mobile, password } = req.body;
 
   //check for existing email
   const emailExistence = async (email) => {
-    //console.log("Email existence", email);
+    console.log("Email existence", email);
     let userExists = await User.findOne({ email: email });
     if (userExists) {
       return Promise.reject(formatResponse(true, 401, "User Exists", email));
@@ -21,16 +22,15 @@ const signUpControl = async (req, res) => {
   //create new schema
   //insert the new user
   const createNewUser = async () => {
-    console.log("create new User");
+    logger.info("create new User");
     let newUser = new User({
       userId: shortid.generate(),
-      firstName: firstName,
-      lastName: lastName,
+      name: name,
       email: email,
       mobile: mobile,
       password: await hashPassword(password),
     });
-    //console.log("new User", newUser);
+    //logger.info("new User", newUser);
     let result;
     let user = await User.create(newUser);
     if (user) {
@@ -52,13 +52,13 @@ const signUpControl = async (req, res) => {
   emailExistence(email)
     .then(createNewUser)
     .then((result) => {
-      console.log("SignUp Success");
+      logger.info("SignUp Success");
       res
         .status(200)
         .json(formatResponse(false, 200, "User Create Sucess", result));
     })
     .catch((error) => {
-      console.error("SignUp Error", error);
+      logger.error(`SignUp Error ${error}`);
       res.status(error.status).json(error);
     });
 };

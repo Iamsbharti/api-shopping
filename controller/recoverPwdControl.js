@@ -2,7 +2,7 @@ const User = require("../models/User");
 const { formatResponse } = require("../library/formatResponse");
 const { hashPassword } = require("../library/passwordHandler");
 const nodemailer = require("nodemailer");
-
+const logger = require("../library/logger");
 //emailExistence
 const emailExistence = async (email) => {
   let userExists = await User.findOne({ email: email });
@@ -14,25 +14,25 @@ const emailExistence = async (email) => {
 };
 
 const recoverPwdControl = async (req, res) => {
-  console.log("Recover Password control");
+  logger.info("Recover Password control");
   const { email } = req.body;
   //generate random code and save against users' recoveryCode
   const generateRecoveryCode = async (foundUser) => {
     let recoveryCode = parseInt(Math.random() * 1000000, 10);
-    //console.log("Recovery Code", recoveryCode);
+    //logger.info("Recovery Code", recoveryCode);
     let query = { email: foundUser.email };
     let update = { passwordRecoverCode: recoveryCode };
     let recoveryResponse;
     let { n } = await User.updateOne(query, update);
 
     if (n === 1) {
-      //console.log("updated code");
+      //logger.info("updated code");
       let result = {
         updated: n.n,
         email: email,
         recoveryCode: recoveryCode,
       };
-      //console.log("finalres", result);
+      //logger.info("finalres", result);
       recoveryResponse = Promise.resolve(result);
     } else {
       recoveryResponse = Promise.reject(
@@ -43,7 +43,7 @@ const recoverPwdControl = async (req, res) => {
   };
   //send code to mail
   const sendEmail = async (result) => {
-    //console.log("send email", result);
+    logger.info("send email");
     let sendEmailResult;
     //construst transport
     let transporter = nodemailer.createTransport({
@@ -68,7 +68,7 @@ const recoverPwdControl = async (req, res) => {
     };
     //send email
     let data = await transporter.sendMail(mailOptions);
-    //console.log("res", data);
+    logger.info(`Response-${data}`);
     if (data) {
       sendEmailResult = Promise.resolve({
         ...result,
@@ -89,23 +89,23 @@ const recoverPwdControl = async (req, res) => {
     .then(generateRecoveryCode)
     .then(sendEmail)
     .then((result) => {
-      console.log("Recovery Email Sent");
+      logger.info("Recovery Email Sent");
       res
         .status(200)
         .json(formatResponse(false, 200, "Recovery Sucess", result));
     })
     .catch((error) => {
-      console.log("Error", error);
+      logger.info(`Error ${error}`);
       res.status(error.status).json(error);
     });
 };
 const resetPassword = async (req, res) => {
-  console.log("validate recovery code and reset Password");
+  logger.info("validate recovery code and reset Password");
   const { recoveryCode, email, password } = req.body;
 
   //validate recoverycode
   const validateCode = async (foundUser) => {
-    //console.log("validate code", foundUser.passwordRecoverCode, recoveryCode);
+    console.log("validate code", foundUser.passwordRecoverCode, recoveryCode);
     let validateRes;
     validateRes =
       recoveryCode === foundUser.passwordRecoverCode
@@ -118,7 +118,7 @@ const resetPassword = async (req, res) => {
   };
   //reset password and recovery code
   const resetPasswordFunc = async (foundUser) => {
-    //console.log("reset password");
+    logger.info("reset password");
     let query = { email: foundUser.email };
     let update = {
       password: await hashPassword(password),
@@ -145,13 +145,13 @@ const resetPassword = async (req, res) => {
     .then(validateCode)
     .then(resetPasswordFunc)
     .then((result) => {
-      //console.log("Result", result);
+      console.log("Result", result);
       res
         .status(200)
         .json(formatResponse(false, 200, "Password Reset Success", result));
     })
     .catch((error) => {
-      console.log("Error", error);
+      logger.info(`Error - ${error}`);
       res.status(error.status).json(error);
     });
 };

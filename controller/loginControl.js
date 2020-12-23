@@ -2,14 +2,14 @@ const { generateTokens } = require("../library/autenticationCode");
 const { formatResponse } = require("../library/formatResponse");
 const User = require("../models/User");
 const { comparePassword } = require("../library/passwordHandler");
-
+const logger = require("../library/logger");
 const loginControl = async (req, res) => {
   console.log("Login Control");
 
   const { email, password } = req.body;
   //emailexistence
   const emailExistence = async (email) => {
-    // //console.log("Email Existence", email);
+    logger.info(`Email Existence - ${email}`);
     let userExists = await User.findOne({ email: email });
     if (!userExists) {
       return Promise.reject(formatResponse(true, 404, "User Not Found", email));
@@ -19,22 +19,16 @@ const loginControl = async (req, res) => {
   };
   //comparepassword
   const validateCredentials = async (foundUser) => {
-    //console.log("Validate credentials");
+    logger.info(`Validate credentials`);
     let validCred = await comparePassword(password, foundUser.password);
-    ////console.log("valid cred", validCred);
+    logger.info(`validCred - ${validCred}`);
     if (validCred) {
       let _userData = foundUser.toObject();
       delete _userData.password;
       delete _userData.__v;
       delete _userData._id;
       delete _userData.passwordRecoverCode;
-      let friendList = _userData.friends;
-      friendList.map((fr, i) => {
-        if (fr === _userData.userId) {
-          delete _userData.friends[i];
-        }
-      });
-      console.log(_userData.friends);
+
       return Promise.resolve(_userData);
     } else {
       return Promise.reject(formatResponse(true, 401, "Login Failed", null));
@@ -42,10 +36,10 @@ const loginControl = async (req, res) => {
   };
   //generatetoken
   const generateToken = async (userData) => {
-    //console.log("generateToken");
+    logger.info(`Generate token`);
     let result;
     generateTokens(userData, (error, tokenDetails) => {
-      ////console.log("Error/token", error);
+      console.log("Error/token", error);
       if (error) {
         result = Promise.reject(
           formatResponse(true, 500, "Token Generation Error", null)
