@@ -59,7 +59,6 @@ router.get(
 router.post(
   "/product/create",
   isAuthorized,
-  validation.createProductValidation,
   upload.single("file"),
   product.createProduct
 );
