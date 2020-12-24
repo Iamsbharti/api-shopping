@@ -2,7 +2,6 @@ const Category = require("../models/Category");
 const logger = require("../library/logger");
 const shortid = require("shortid");
 const { formatResponse } = require("../library/formatResponse");
-const EXCLUDE = "-__v -_id";
 
 const createCategory = async (req, res) => {
   logger.info("Create Category Control");

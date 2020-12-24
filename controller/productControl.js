@@ -2,7 +2,7 @@ const Product = require("../models/Product");
 const shortid = require("shortid");
 const logger = require("../library/logger");
 const { formatResponse } = require("../library/formatResponse");
-
+const EXCLUDE = "-__v -_id";
 const createProduct = async (req, res) => {
   logger.info("Create Product control");
   const {
@@ -60,6 +60,44 @@ const updateImage = async (fileId, product, res) => {
       );
   }
 };
+const getAllProducts = async (req, res) => {
+  logger.info("Get All products control");
+  Product.find()
+    .select(EXCLUDE)
+    .populate("image", ["_id", "filename"])
+    .populate("category", ["_id", "name", "description"])
+    .lean()
+    .exec((error, allProducts) => {
+      if (error) {
+        res
+          .status(500)
+          .json(formatResponse(true, 500, "Internal Server Error"), error);
+      } else {
+        res
+          .status(200)
+          .json(formatResponse(true, 200, "All Products", allProducts));
+      }
+    });
+};
+const getProductById = async (req, res) => {
+  logger.info("Get Product By Id Control");
+  const { productId } = req.query;
+  await Product.findOne({ productId: productId })
+    .select(EXCLUDE)
+    .populate("image", ["_id", "filename"])
+    .populate("category", ["_id", "name", "description"])
+    .exec((error, product) => {
+      if (error) {
+        res
+          .status(500)
+          .json(formatResponse(true, 500, "Internal Server Error"), error);
+      } else {
+        res.status(200).json(formatResponse(true, 200, "Product", product));
+      }
+    });
+};
 module.exports = {
   createProduct,
+  getAllProducts,
+  getProductById,
 };
