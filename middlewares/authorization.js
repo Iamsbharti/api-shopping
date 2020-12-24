@@ -1,28 +1,43 @@
 const jwt = require("jsonwebtoken");
+const { format } = require("winston");
 const { formatResponse } = require("../library/formatResponse");
+const logger = require("../library/logger");
 
-exports.isAuthorized = (req, res, next) => {
-  //console.log("Is authorized middleware");
-  const reqBodyAuth = req.body.authToken;
-  const reqQueryAuth = req.query.authToken;
-  const reqHeaderAuth = req.header("authToken");
-  //console.log("authtoken", reqBodyAuth, reqHeaderAuth, reqQueryAuth);
+exports.isAuthorized = async (req, res, next) => {
+  let reqUserId = req.query.userId;
+
+  console.debug(req.body);
+  logger.info("Authorizing...", reqUserId);
+  let authTokenQuery = req.query.authToken;
+  let authTokenBody = req.body.authToken;
+  let authTokenHeader = req.header("authToken");
+
+  /**check for token in req */
   if (
-    reqBodyAuth !== undefined ||
-    reqQueryAuth !== undefined ||
-    reqHeaderAuth !== undefined
+    authTokenBody !== undefined ||
+    authTokenHeader !== undefined ||
+    authTokenQuery !== undefined
   ) {
-    //console.log("if-auth");
-    let decoded = jwt.verify(
-      reqBodyAuth || reqQueryAuth || reqHeaderAuth,
-      process.env.TOKEN_SECRET
-    );
-    console.log("Decoded", decoded.data.email);
+    /**validate the token */
+    try {
+      let decodedInfo = jwt.verify(
+        authTokenQuery || authTokenHeader || authTokenBody,
+        process.env.TOKEN_SECRET
+      );
+
+      let { userId } = decodedInfo.data;
+      console.debug("userid:", userId);
+      if (userId !== reqUserId) {
+        return res
+          .status(400)
+          .json(formatResponse(true, 400, "Invalid Token", null));
+      }
+    } catch (error) {
+      return res.status(400).json(formatResponse(true, 500, "Error", error));
+    }
   } else {
-    //console.log("no auth");
-    return res
-      .status(400)
-      .json(formatResponse(true, 400, "AuthToken Missing", null));
+    /**auth token missing */
+    res.status(400).json(formatResponse(true, 400, "AuthToken Missing", null));
   }
   next();
 };

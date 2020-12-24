@@ -100,9 +100,45 @@ const signupParamValidation = (req, res, next) => {
   }
   next();
 };
+const createCategoryValidation = (req, res, next) => {
+  logger.info("Create Category Validation");
+  let categorySchema = joi.object({
+    userId: joi.string().min(4).required(),
+    name: joi.string().min(8).required(),
+    description: joi.string().min(8).required(),
+  });
+
+  let { error } = categorySchema.validate(req.query, options);
+  if (error) {
+    let errorMessage = [];
+    error.details.map((err) => errorMessage.push(err.message));
+    return res.json(
+      formatResponse(true, 400, "Not valid Input Params", errorMessage)
+    );
+  }
+  next();
+};
+const getCategoryValidation = (req, res, next) => {
+  logger.info("Get Category Validation");
+  let categorySchema = joi.object({
+    userId: joi.string().min(4).required(),
+  });
+
+  let { error } = categorySchema.validate(req.query, options);
+  if (error) {
+    let errorMessage = [];
+    error.details.map((err) => errorMessage.push(err.message));
+    return res.json(
+      formatResponse(true, 400, "Not valid Input Params", errorMessage)
+    );
+  }
+  next();
+};
 module.exports = {
   signupParamValidation,
   loginParamValidation,
   recoverPwdValidation,
   resetPwdValidation,
+  createCategoryValidation,
+  getCategoryValidation,
 };
