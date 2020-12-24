@@ -42,12 +42,14 @@ router.post(
 //create
 router.post(
   "/category/create",
+  isAuthorized,
   validation.createCategoryValidation,
   category.createCategory
 );
 //fetch
 router.get(
   "/category/all",
+  isAuthorized,
   validation.getCategoryValidation,
   category.getCategories
 );

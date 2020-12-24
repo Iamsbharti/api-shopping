@@ -37,7 +37,9 @@ exports.isAuthorized = async (req, res, next) => {
     }
   } else {
     /**auth token missing */
-    res.status(400).json(formatResponse(true, 400, "AuthToken Missing", null));
+    return res
+      .status(400)
+      .json(formatResponse(true, 400, "AuthToken Missing", null));
   }
   next();
 };
