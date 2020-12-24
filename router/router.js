@@ -62,4 +62,17 @@ router.post(
   upload.single("file"),
   product.createProduct
 );
+// fetch
+router.get(
+  "/product/all",
+  isAuthorized,
+  validation.allProductValidation,
+  product.getAllProducts
+);
+router.get(
+  "/product/id",
+  isAuthorized,
+  validation.productByIdValidation,
+  product.getProductById
+);
 module.exports = router;
