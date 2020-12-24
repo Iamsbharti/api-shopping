@@ -24,7 +24,7 @@ let productSchema = mongoose.Schema({
     type: Number,
     required: true,
   },
-  desciption: {
+  description: {
     type: String,
     required: true,
   },
@@ -34,7 +34,7 @@ let productSchema = mongoose.Schema({
   },
   purchaseCount: {
     type: Number,
-    require: true,
+    default: 0,
   },
   seller: {
     type: String,
@@ -46,7 +46,6 @@ let productSchema = mongoose.Schema({
   },
   modifiedAt: {
     type: Date,
-    default: Date.now(),
   },
 });
 module.exports = mongoose.model("Product", productSchema);

@@ -134,6 +134,30 @@ const getCategoryValidation = (req, res, next) => {
   }
   next();
 };
+const createProductValidation = (req, res, next) => {
+  logger.info("Create Product Validation");
+  console.log("body validation:", req.body);
+  let productSchema = joi.object({
+    name: joi.string().min(4).required(),
+    category: joi.string().min(4).required(),
+    price: joi.number().min(4).required(),
+    inStock: joi.boolean().min(4).required(),
+    discount: joi.number().min(4).required(),
+    description: joi.string().min(4).required(),
+    quantity: joi.number().min(4).required(),
+    seller: joi.string().min(4).required(),
+  });
+
+  let { error } = productSchema.validate(req.body, options);
+  if (error) {
+    let errorMessage = [];
+    error.details.map((err) => errorMessage.push(err.message));
+    return res.json(
+      formatResponse(true, 400, "Not valid Input Params", errorMessage)
+    );
+  }
+  next();
+};
 module.exports = {
   signupParamValidation,
   loginParamValidation,
@@ -141,4 +165,5 @@ module.exports = {
   resetPwdValidation,
   createCategoryValidation,
   getCategoryValidation,
+  createProductValidation,
 };
