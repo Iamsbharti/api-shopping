@@ -163,10 +163,39 @@ const deleteProduct = async (req, res) => {
     res.status(404).json(formatResponse(false, 404, "Product Not found", null));
   }
 };
+const searchRoute = async (req, res) => {
+  logger.error("Search Route Control");
+  const { search } = req.query;
+  const queryOptions = {
+    $or: [
+      { description: { $regex: new RegExp(search.toLowerCase(), "i") } },
+      { name: { $regex: new RegExp(search.toLowerCase(), "i") } },
+      { seller: { $regex: new RegExp(search.toLowerCase(), "i") } },
+    ],
+  };
+  //console.debug("queryoptions:", queryOptions);
+  Product.find(queryOptions)
+    .select(EXCLUDE)
+    .populate("image", ["_id", "filename"])
+    .populate("category", ["_id", "name", "description"])
+    .lean()
+    .exec((error, products) => {
+      if (error) {
+        res
+          .status(500)
+          .json(
+            formatResponse(true, 500, "Internal Server Error", error.message)
+          );
+      } else {
+        res.status(200).json(formatResponse(false, 200, "Products", products));
+      }
+    });
+};
 module.exports = {
   createProduct,
   getAllProducts,
   getProductById,
   updateProduct,
   deleteProduct,
+  searchRoute,
 };

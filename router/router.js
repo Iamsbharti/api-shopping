@@ -86,7 +86,14 @@ router.post(
 router.delete(
   "/product/delete",
   isAuthorized,
-  validation.deleteProductIdValidation,
+  validation.deleteProductValidation,
   product.deleteProduct
+);
+//search
+router.get(
+  "/product/search",
+  isAuthorized,
+  validation.searchProductValidation,
+  product.searchRoute
 );
 module.exports = router;
