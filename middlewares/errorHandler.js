@@ -1,11 +1,11 @@
 const { formatResponse } = require("../library/formatResponse");
-
+const logger = require("../library/logger");
 exports.logIp = async (req, res, next) => {
   let path = req.originalUrl;
   let method = req.method;
   let ip = req.ip;
   let protocol = req.protocol;
-  console.log(
+  logger.info(
     `${method} requested by - ${ip} for path -${path} using ${protocol}`
   );
   next();

@@ -5,8 +5,6 @@ const logger = require("../library/logger");
 
 exports.isAuthorized = async (req, res, next) => {
   let reqUserId = req.query.userId;
-
-  console.debug(req.body);
   logger.info("Authorizing...", reqUserId);
   let authTokenQuery = req.query.authToken;
   let authTokenBody = req.body.authToken;
@@ -26,7 +24,6 @@ exports.isAuthorized = async (req, res, next) => {
       );
 
       let { userId } = decodedInfo.data;
-      console.debug("userid:", userId);
       if (userId !== reqUserId) {
         return res
           .status(400)
