@@ -96,8 +96,34 @@ const getProductById = async (req, res) => {
       }
     });
 };
+const updateProduct = async (req, res) => {
+  logger.info("Update Product Control");
+  const { productId, updateOptions } = req.body;
+  Product.updateOne({ productId: productId }, updateOptions).exec(
+    (error, updated) => {
+      if (error) {
+        res
+          .status(500)
+          .json(formatResponse(true, 500, "Internal Server Error", error));
+      } else {
+        let { n } = updated;
+        res
+          .status(200)
+          .json(
+            formatResponse(
+              false,
+              200,
+              "Product updated",
+              `${n} document affected`
+            )
+          );
+      }
+    }
+  );
+};
 module.exports = {
   createProduct,
   getAllProducts,
   getProductById,
+  updateProduct,
 };

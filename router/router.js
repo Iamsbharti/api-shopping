@@ -75,4 +75,10 @@ router.get(
   validation.productByIdValidation,
   product.getProductById
 );
+router.post(
+  "/product/update",
+  isAuthorized,
+  validation.upadteProductValidation,
+  product.updateProduct
+);
 module.exports = router;
