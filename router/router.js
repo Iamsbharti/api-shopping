@@ -75,10 +75,18 @@ router.get(
   validation.productByIdValidation,
   product.getProductById
 );
+//update
 router.post(
   "/product/update",
   isAuthorized,
   validation.upadteProductValidation,
   product.updateProduct
+);
+//delete
+router.delete(
+  "/product/delete",
+  isAuthorized,
+  validation.deleteProductIdValidation,
+  product.deleteProduct
 );
 module.exports = router;

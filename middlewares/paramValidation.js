@@ -205,6 +205,22 @@ const upadteProductValidation = (req, res, next) => {
   }
   next();
 };
+const deleteProductIdValidation = (req, res, next) => {
+  logger.info("delete product Validation");
+  let productSchema = joi.object({
+    userId: joi.string().min(4).required(),
+    productId: joi.string().min(4).required(),
+  });
+  let { error } = productSchema.validate(req.query, options);
+  if (error) {
+    let errorMessage = [];
+    error.details.map((err) => errorMessage.push(err.message));
+    return res.json(
+      formatResponse(true, 400, "Not valid Input Params", errorMessage)
+    );
+  }
+  next();
+};
 module.exports = {
   signupParamValidation,
   loginParamValidation,
@@ -216,4 +232,5 @@ module.exports = {
   allProductValidation,
   productByIdValidation,
   upadteProductValidation,
+  deleteProductIdValidation,
 };
