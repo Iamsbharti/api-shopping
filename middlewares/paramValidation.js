@@ -5,8 +5,8 @@ const logger = require("../library/logger");
 const loginParamValidation = (req, res, next) => {
   logger.info("Login Param Validation");
   let loginSchema = joi.object({
-    loginId: joi.string().email().min(4).required(),
-    password: joi.string().min(8).required(),
+    loginId: joi.string().required(),
+    password: joi.string().required(),
   });
 
   let { error } = loginSchema.validate(req.body, options);

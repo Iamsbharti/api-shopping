@@ -15,7 +15,9 @@ const loginControl = async (req, res) => {
       : { mobile: loginId };
     let userExists = await User.findOne(query);
     if (!userExists) {
-      return Promise.reject(formatResponse(true, 404, "User Not Found", email));
+      return Promise.reject(
+        formatResponse(true, 404, "We Don't Have You", loginId)
+      );
     } else {
       return Promise.resolve(userExists);
     }
