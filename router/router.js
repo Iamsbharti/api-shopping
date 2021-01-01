@@ -63,12 +63,7 @@ router.post(
   product.createProduct
 );
 // fetch
-router.get(
-  "/product/all",
-  isAuthorized,
-  validation.allProductValidation,
-  product.getAllProducts
-);
+router.get("/product/all", product.getAllProducts);
 router.get(
   "/product/id",
   isAuthorized,
